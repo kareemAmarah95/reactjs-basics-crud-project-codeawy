@@ -10,15 +10,7 @@ interface IProps {
 
 
 const Modal = ({ isOpen, closeModal, title, children }: IProps) => {
-    // const [isOpen, setIsOpen] = useState(true)
 
-    // function closeModal() {
-    //     setIsOpen(false)
-    // }
-
-    // function openModal() {
-    //     setIsOpen(true)
-    // }
 
     return (
         <>
