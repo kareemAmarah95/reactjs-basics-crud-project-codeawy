@@ -22,7 +22,7 @@ const App = () => {
   }
   const renderProducts = productList.map(product => <ProductCard key={product.id} product={product} />);
   const renderFormInput = formInputsList.map(input => <div className="flex flex-col">
-    <label htmlFor={input.id}>{input.label}</label>
+    <label className="mb-[1px] text-sm font-medium text-gray-700" htmlFor={input.id}>{input.label}</label>
     <Input type="text" id={input.id} name={input.name} />
   </div>);
   return (
@@ -33,11 +33,13 @@ const App = () => {
         {renderProducts}
       </div>
       <Modal isOpen={isOpen} closeModal={closeModal} title="ADD A NEW PRODUCT">
-        {renderFormInput}
-        <div className="flex items-center space-x-3">
-          <Button className="bg-indigo-700 hover:bg-indigo-800  w-full">Submit</Button>
-          <Button className="bg-gray-400 hover:bg-gray-500 w-full">Cancel</Button>
-        </div>
+        <form className="space-y-3">
+          {renderFormInput}
+          <div className="flex items-center space-x-3">
+            <Button className="bg-indigo-700 hover:bg-indigo-800  w-full">Submit</Button>
+            <Button className="bg-gray-400 hover:bg-gray-500 w-full">Cancel</Button>
+          </div>
+        </form>
       </Modal>
     </main>
   )
