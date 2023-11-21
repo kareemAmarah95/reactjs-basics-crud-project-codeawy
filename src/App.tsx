@@ -1,7 +1,7 @@
 import ProductCard from "./components/ProductCard";
 import { formInputsList, productList, colors, categories } from './data/index';
 import Modal from './components/ui/Modal';
-import { ChangeEvent, FormEvent, useState } from 'react';
+import { ChangeEvent, FormEvent, Fragment, useState } from 'react';
 import Button from './components/ui/Button';
 import Input from './components/ui/Input';
 import { IProduct } from './interfaces';
@@ -31,6 +31,7 @@ const App = () => {
   const [products, setProducts] = useState<IProduct[]>(productList)
   const [product, setProduct] = useState<IProduct>(defaultProductObj)
   const [productToEdit, setProductToEdit] = useState<IProduct>(defaultProductObj)
+  const [productToEditIdx, setProductToEditIdx] = useState<number>(0)
   // state
   const [errors, setErrors] = useState({
     title: '',
@@ -42,7 +43,8 @@ const App = () => {
   const [isOpen, setIsOpen] = useState(false)
   const [isOpenEditModal, setIsOpenEditModal] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState(categories[0]);
-  console.log('product To Edit', productToEdit)
+
+
   // handler
 
   function closeModal() {
@@ -135,23 +137,37 @@ const App = () => {
       setErrors(errors);
       return;
     }
-
+    const updatedProducts = [...products];
+    updatedProducts[productToEditIdx] = { ...productToEdit, colors: tempColors.concat(productToEdit.colors) };
+    console.log(productToEdit);
+    setProducts(updatedProducts);
     setProductToEdit(defaultProductObj);
     setTempColors([]);
-    closeModal();
+    closeEditModal();
   }
 
   // render
-  const renderProducts = products.map(product => <ProductCard key={product.id} product={product} setProductToEdit={setProductToEdit} openEditModal={openEditModal} />);
+  const renderProducts = products.map((product, idx) => (
+    <ProductCard key={product.id} product={product} setProductToEdit={setProductToEdit} openEditModal={openEditModal}
+      idx={idx}
+      setProductToEditIdx={setProductToEditIdx}
+    />
+
+  ))
   const renderFormInput = formInputsList.map(input => (
     <div className="flex flex-col" key={input.id}>
       <label className="mb-[1px] text-sm font-medium text-gray-700" htmlFor={input.id}>{input.label}</label>
       <Input type="text" id={input.id} name={input.name} value={product[input.name]} onChange={onChangeHandler} />
       <ErrorMessage message={errors[input.name]} />
-    </div>));
+    </div>
+  ));
 
   const renderProductColors = colors.map(color => <CircleColor key={color} color={color} onClick={() => {
     if (tempColors.includes(color)) {
+      setTempColors(prev => prev.filter(item => item !== color))
+      return;
+    }
+    if (productToEdit.colors.includes(color)) {
       setTempColors(prev => prev.filter(item => item !== color))
       return;
     }
@@ -207,12 +223,12 @@ const App = () => {
           {renderProductEditWithErrorMsg('imageURL', 'Product Image URL', 'imageURL')}
           {renderProductEditWithErrorMsg('price', 'Product Price', 'price')}
           {/* {renderFormInput} */}
-          {/* <Select selected={selectedCategory} setSelected={setSelectedCategory} /> */}
+          <Select selected={productToEdit.category} setSelected={(value) => setProductToEdit({ ...productToEdit, category: value })} />
           <div className="flex items-center my-4 space-x-2 flex-wrap">
             {renderProductColors}
           </div>
           <div className="flex justify-start items-center ml-2 my-4 space-x-2 flex-wrap">
-            {tempColors.map(color => <span style={{ backgroundColor: color }} className="p-1 mr-1 mb-1 text-xs rounded-md text-white" key={color}>{color}</span>)}
+            {tempColors.concat(productToEdit.colors).map(color => <span style={{ backgroundColor: color }} className="p-1 mr-1 mb-1 text-xs rounded-md text-white" key={color}>{color}</span>)}
           </div>
 
 

@@ -6,19 +6,23 @@ import CircleColor from './CircleColor';
 interface IProps {
     product: IProduct;
     setProductToEdit: (product: IProduct) => void;
-    openEditModal: () => void
+    openEditModal: () => void;
+    idx: number;
+    setProductToEditIdx: (value: number) => void;
+
 }
 
 
 
-const ProductCard = ({ product, setProductToEdit, openEditModal }: IProps) => {
+const ProductCard = ({ product, setProductToEdit, openEditModal, idx, setProductToEditIdx }: IProps) => {
     const { imageURL, title, description, price, category, colors } = product;
     // render
     const renderProductColors = colors.map(color => <CircleColor key={color} color={color} />)
     // handler
     const onEdit = () => {
         setProductToEdit(product);
-        openEditModal()
+        openEditModal();
+        setProductToEditIdx(idx);
     }
     return (
         <div className="max-w-sm md:max-w-lg mx-auto md:mx-0 border rounded-md p-2 flex flex-col">
