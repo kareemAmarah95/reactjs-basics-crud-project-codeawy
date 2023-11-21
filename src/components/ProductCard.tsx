@@ -9,12 +9,12 @@ interface IProps {
     openEditModal: () => void;
     idx: number;
     setProductToEditIdx: (value: number) => void;
-
+    openConfirmModal: () => void;
 }
 
 
 
-const ProductCard = ({ product, setProductToEdit, openEditModal, idx, setProductToEditIdx }: IProps) => {
+const ProductCard = ({ product, setProductToEdit, openEditModal, idx, setProductToEditIdx, openConfirmModal }: IProps) => {
     const { imageURL, title, description, price, category, colors } = product;
     // render
     const renderProductColors = colors.map(color => <CircleColor key={color} color={color} />)
@@ -23,6 +23,11 @@ const ProductCard = ({ product, setProductToEdit, openEditModal, idx, setProduct
         setProductToEdit(product);
         openEditModal();
         setProductToEditIdx(idx);
+    }
+
+    const onRemove = () => {
+        setProductToEdit(product);
+        openConfirmModal();
     }
     return (
         <div className="max-w-sm md:max-w-lg mx-auto md:mx-0 border rounded-md p-2 flex flex-col">
@@ -41,7 +46,7 @@ const ProductCard = ({ product, setProductToEdit, openEditModal, idx, setProduct
 
             <div className="flex items-center justify-between space-x-2 mt-5">
                 <Button className="bg-indigo-700 hover:bg-indigo-800" width="w-full" onClick={onEdit}>Edit</Button>
-                <Button className="bg-red-700 hover:bg-red-800" width="w-full">Delete</Button>
+                <Button className="bg-red-700 hover:bg-red-800" width="w-full" onClick={onRemove}>Delete</Button>
 
             </div>
         </div>
